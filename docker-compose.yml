@@ -1,0 +1,29 @@
+version: '3.6'
+
+services:
+    khulnasoft:
+        image: "khulnasoft/khulnasoft:${KHULNASOFT_VERSION}"
+        container_name: khulnasoft
+        environment:
+            - KHULNASOFT_START_ARGS=--accept-license
+            - KHULNASOFT_HEC_TOKEN=11111111-1111-1111-1111-1111111111113
+            - KHULNASOFT_PASSWORD=changed!
+            - KHULNASOFT_APPS_URL=https://github.com/khulnasoft/sdk-app-collection/releases/download/v1.1.0/sdkappcollection.tgz
+        ports:
+            - 8000:8000
+            - 8088:8088
+            - 8089:8089
+        healthcheck:
+            test: ['CMD', 'curl', '-f', 'http://localhost:8000']
+            interval: 5s
+            timeout: 5s
+            retries: 20
+        volumes:
+            - "./tests/searchcommands/test_apps/eventing_app:/opt/khulnasoft/etc/apps/eventing_app"
+            - "./tests/searchcommands/test_apps/generating_app:/opt/khulnasoft/etc/apps/generating_app"
+            - "./tests/searchcommands/test_apps/reporting_app:/opt/khulnasoft/etc/apps/reporting_app"
+            - "./tests/searchcommands/test_apps/streaming_app:/opt/khulnasoft/etc/apps/streaming_app"
+            - "./khulnasoftlib:/opt/khulnasoft/etc/apps/eventing_app/lib/khulnasoftlib"
+            - "./khulnasoftlib:/opt/khulnasoft/etc/apps/generating_app/lib/khulnasoftlib"
+            - "./khulnasoftlib:/opt/khulnasoft/etc/apps/reporting_app/lib/khulnasoftlib"
+            - "./khulnasoftlib:/opt/khulnasoft/etc/apps/streaming_app/lib/khulnasoftlib"
